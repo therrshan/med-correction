@@ -2,5 +2,4 @@ models/
 .venv/
 __pycache__/
 *.db
-dataset.csv
 eval.csv
