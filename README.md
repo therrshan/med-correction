@@ -235,4 +235,60 @@ Average BLEU: 80.61%
 Latency: 131.7 ms/sentence
 ```
 
+![Evaluation Results](image.png)
+
+*Terminal output showing evaluation metrics and sample predictions*
+
+
 Output saved to `eval_results.csv` with per-sample metrics and predictions.
+
+---
+
+## Discussion & Analysis
+
+### Understanding the Metrics Gap
+
+The evaluation reveals an interesting discrepancy:
+- **Exact Match: 3%** (very low)
+- **CER: 10%** (quite good)
+- **BLEU: 81%** (strong)
+
+**Why is exact match so low despite good CER/BLEU?**
+
+1. **Character-level precision matters**: Even a single wrong character (e.g., missing anusvara `ं` or wrong matra) fails exact match, but barely affects CER/BLEU
+   - Example: "पेट में" vs "पेट मैं" → 1 character difference = 0% exact match, but ~5% CER
+
+2. **Minor spacing/punctuation differences**: Model might add/remove spaces inconsistently
+   - "दर्द है" vs "दर्द है " (trailing space) → Failed exact match, negligible CER impact
+
+3. **Deterministic vs probabilistic**: Exact match requires perfect reproduction, while CER/BLEU are forgiving of minor variations
+
+4. **Evaluation set characteristics**: If eval samples have complex sentences or rare vocabulary not seen in training, model gets "close enough" but not perfect
+
+### System Limitations
+
+**Current bottlenecks:**
+- Synthetic training data doesn't capture all real ASR error patterns
+- Small model (300M params) has limited capacity for complex corrections
+- Rule-based feedback is word-level only, doesn't handle multi-word errors
+
+**Failure modes:**
+- Under-correction: Misses subtle errors in complex medical terms
+- Inconsistent spacing and punctuation handling
+- Struggles with rare vocabulary outside training distribution
+
+**What would improve this?**
+- Train on real ASR output data (not synthetic)
+- Fine-tune on domain-specific medical conversations
+- Larger model (ByT5-base or mT5) for better capacity
+- Sentence-level confidence scoring to detect low-quality predictions
+- Post-processing rules for spacing normalization
+- Active learning loop with continuous retraining on feedback
+
+### Production Considerations
+
+This is a prototype demonstrating feasibility. For production deployment:
+- Replace naive dictionary with proper alignment and model fine-tuning
+- Add confidence thresholds to flag uncertain corrections for human review
+- Build monitoring for model drift and correction quality over time
+- Scale inference with batching and model quantization for latency
