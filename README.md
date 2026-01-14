@@ -87,6 +87,9 @@ input,target
 
 This approach provides a strong foundation for learning correction patterns while maintaining linguistic authenticity for Hindi medical text.
 
+**Note on AI Tool Usage:** 
+AI assistance (Claude) was used to generate the hardcoded vocabulary lists and sentence templates in corpus.py and the phonetic/visual confusion mappings in noise.py. All code logic, training pipeline, and model implementation were written independently.
+
 ---
 
 ## Model Training
