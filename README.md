@@ -248,22 +248,13 @@ Output saved to `eval_results.csv` with per-sample metrics and predictions.
 
 ### Understanding the Metrics Gap
 
-The evaluation reveals an interesting discrepancy:
-- **Exact Match: 3%** (very low)
-- **CER: 10%** (quite good)
-- **BLEU: 81%** (strong)
+1. **Character-level precision matters**: Even a single wrong character (e.g., missing anusvara `ं` or wrong matra) fails exact match, but barely affects CER/BLEU.
 
-**Why is exact match so low despite good CER/BLEU?**
-
-1. **Character-level precision matters**: Even a single wrong character (e.g., missing anusvara `ं` or wrong matra) fails exact match, but barely affects CER/BLEU
-   - Example: "पेट में" vs "पेट मैं" → 1 character difference = 0% exact match, but ~5% CER
-
-2. **Minor spacing/punctuation differences**: Model might add/remove spaces inconsistently
-   - "दर्द है" vs "दर्द है " (trailing space) → Failed exact match, negligible CER impact
+2. **Minor spacing/punctuation differences**: Model might add/remove spaces inconsistently.
 
 3. **Deterministic vs probabilistic**: Exact match requires perfect reproduction, while CER/BLEU are forgiving of minor variations
 
-4. **Evaluation set characteristics**: If eval samples have complex sentences or rare vocabulary not seen in training, model gets "close enough" but not perfect
+4. **Evaluation set characteristics**: Eval samples have complex sentences and rare vocabulary not seen in training, model gets "close enough" but not perfect.
 
 ### System Limitations
 
