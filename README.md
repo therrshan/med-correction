@@ -230,7 +230,7 @@ Pipeline applies two-stage correction (dictionary → neural model) to each test
 **Performance:**
 ```
 Exact Match: 3.56%
-Average CER: 122.98%
+Average CER: 12.98%
 Average BLEU: 80.61%
 Latency: 131.7 ms/sentence
 ```
